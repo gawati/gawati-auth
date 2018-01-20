@@ -1,7 +1,8 @@
-import React from 'react';
+import React from 'react'
+import { Link } from 'react-router-dom';
 import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react';
 
-const LoginForm = () => (
+const LoginPage = () => (
   <div className='login-form'>
     <style>{`
       body > div,
@@ -17,8 +18,8 @@ const LoginForm = () => (
     >
       <Grid.Column style={{ maxWidth: 450 }}>
         <Header as='h2' color='teal' textAlign='center'>
-          <Image src='/Koo_logo.png' />
-          {' '}Koo | Login
+          <Image src='/logo.png' />
+          {' '}Gawati | Login
         </Header>
         <Form size='large'>
           <Segment stacked>
@@ -40,11 +41,11 @@ const LoginForm = () => (
           </Segment>
         </Form>
         <Message>
-        <a href=''>Forgot Password</a> | New to us ? <a href=''>Sign Up</a>
+          <Link to="/reset-password">Forgot Password</Link> | Don't have account ? <Link to="/register">Sign Up</Link>
         </Message>
       </Grid.Column>
     </Grid>
   </div>
 )
 
-export default LoginForm;
+export default LoginPage;
