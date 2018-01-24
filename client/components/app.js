@@ -1,11 +1,16 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Link, Redirect, withRouter } from 'react-router-dom';
 
-import LoginPage from './components/LoginPage';
-import RegistrationPage from './components/RegistrationPage';
-import ResetPassword from './components/ResetPassword';
+import LoginPage from './LoginPage';
+import RegistrationPage from './RegistrationPage';
+import ResetPassword from './ResetPassword';
+import Dashboard from './Dashboard';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+  }
+
   render() {
     return (
       <Router>
@@ -15,9 +20,7 @@ class App extends Component {
             <Route exact path="/login" component={LoginPage} />
             <Route exact path="/register" component={RegistrationPage} />
             <Route exact path="/reset-password" component={ResetPassword} />
-            <Route render={() => (
-              <p>Invalid Path! - <Link to="/">Go Home</Link></p>
-            )} />
+            <Route path="/dashboard" component={Dashboard}/>
           </Switch>
         </React.Fragment>
       </Router>

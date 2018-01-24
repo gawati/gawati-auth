@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react'
 
 const options = [
@@ -8,12 +9,33 @@ const options = [
 ]
 
 class RegistratioPage extends React.Component {
-  state = {
-    email: '',
-    password: ''
-  };
+  constructor(props) {
+    super(props);
+    this.state = { name: '', email: '', password: '', confirmPassword: '', info: '' }
 
-  handleChange = (e, { name, value }) => this.setState({ [name]: value });
+    this.handleChange = this.handleChange.bind(this);
+    this.emailSignup = this.emailSignup.bind(this);
+  }
+
+  handleChange(e, { name, value }) {
+    this.setState({ [name]: value });
+  }
+
+  emailSignup() {
+    const { name, email, password, confirmPassword } = this.state;
+    axios.post('/register', {
+      name, email, password, confirmPassword
+    })
+    .then(response => {
+      console.log('server response:', response.data);
+      if(response.data.email === this.state.email) {
+        window.location = '/dashboard';
+      }
+    })
+    .catch(error => {
+      console.log('something went wrong!', error);
+    });
+  }
 
   render() {
     return (
@@ -33,14 +55,14 @@ class RegistratioPage extends React.Component {
         <Grid.Column style={{ maxWidth: 450 }}>
           <Header as='h2' color='teal' textAlign='center'>
             <Image src='/logo.png' />
-            {' '}Gawati | Sign-Up
+            {' '}Koo | Sign-Up
           </Header>
           <Form size='large' onSubmit={this.emailSignup}>
             <Segment stacked>
               
             <Form.Group>
-              <Form.Input placeholder='First name' />
-              <Form.Input  placeholder='Last name' />
+              <Form.Input placeholder='First name' name='name' value={this.state.name} onChange={this.handleChange} />
+              <Form.Input placeholder='Last name' />
             </Form.Group>
             <br/>
             <Form.Group>
@@ -69,23 +91,31 @@ class RegistratioPage extends React.Component {
                 onChange={this.handleChange}
               />
               
+              <Form.Input
+                fluid
+                icon='lock'
+                iconPosition='left'
+                name='confirmPassword'
+                placeholder='Re-enter Password'
+                type='password'
+                value={this.state.confirmPassword}
+                onChange={this.handleChange}
+              />
               
               <Button color='teal' fluid size='large'>
                   Sign Up
               </Button>
             </Segment>
-            <p style={{ color: 'red' }}>{ this.state.error }</p>
+            <p style={{ color: 'green' }}>{ this.state.info }</p>
             <strong>or</strong>
             <Segment stacked>
-              
-              
                 <Button color='blue' fluid size='large'>Sign Up with Facebook</Button>
                 <br/>
                 <Button color='red' fluid size='large'>Sign Up with Google</Button>
               </Segment>
           </Form>
           <Message>
-            Already a member ? <Link to="/login" href='#'>Login</Link>
+            Already a member ? <Link to="/login">Login</Link>
           </Message>
         </Grid.Column>
       </Grid>
