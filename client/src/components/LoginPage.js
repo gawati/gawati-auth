@@ -1,31 +1,28 @@
-import React from 'react'
+import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react';
 
-class LoginPage extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { email: '', password: '', info: '' }
+class LoginPage extends Component {
+  state = { email: '', password: '', info: '' }
 
-    this.handleChange = this.handleChange.bind(this);
-    this.login = this.login.bind(this);
-  }
+  handleChange = (e, { name, value }) => { this.setState({ [name]: value }); }
 
-  handleChange(e, { name, value }) {
-    this.setState({ [name]: value });
-  }
-
-  login() {
+  login = () => {
+    this.setState({ info: '' });
     const { email, password } = this.state;
     axios.post('/login', {
       email, password
     })
     .then(response => {
-      console.log('server response:', response);
-      if(response.data.email === this.state.email) {
-        window.location = '/dashboard';
-      }
+      //console.log('server response:', response);
+      if(response.data.errorType === 'validation') {
+        this.setState({ info: response.data.errors });
+      } else if(response.data === 401) {
+        this.setState({ info: ['The email or password is incorrect'] });
+      } else if(response.data._id) {
+        window.location.replace('/dashboard');
+      } 
     })
     .catch(error => {
       console.log('something went wrong!', error);
@@ -49,8 +46,7 @@ class LoginPage extends React.Component {
         >
           <Grid.Column style={{ maxWidth: 450 }}>
             <Header as='h2' color='teal' textAlign='center'>
-              <Image src='/logo.png' />
-              {' '}Koo | Login
+              <Image src='/logo.png' /> Gawati | Login
             </Header>
             <Form size='large' onSubmit={this.login}>
               <Segment stacked>
@@ -63,7 +59,6 @@ class LoginPage extends React.Component {
                   value={this.state.email}
                   onChange={this.handleChange}
                 />
-
                 <Form.Input
                   fluid
                   icon='lock'
@@ -74,10 +69,12 @@ class LoginPage extends React.Component {
                   value={this.state.password}
                   onChange={this.handleChange}
                 />
-
                 <Button color='teal' fluid size='large'>Login</Button>
               </Segment>
             </Form>
+            {
+              this.state.info ? <Message error list={this.state.info} /> : null
+            }
             <Message>
               <Link to="/reset-password">Forgot Password</Link> | Don't have account ? <Link to="/register">Sign Up</Link>
             </Message>
@@ -89,3 +86,4 @@ class LoginPage extends React.Component {
 }
 
 export default LoginPage;
+
