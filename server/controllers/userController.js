@@ -50,3 +50,16 @@ exports.validateLogin = (req, res, next) => {
   }
   next();
 };
+
+exports.validateForgotPassword = (req, res, next) => {
+  console.log('in validateForgotPassword');
+  req.checkBody('email', 'Invalid Email!').isEmail();
+ 
+  const errors = req.validationErrors();
+  if (errors) {
+    //console.log('error', errors.map(err => err.msg));
+    res.json({"errorType": "validation", "errors": errors.map(err => err.msg)});
+    return;
+  }
+  next();
+};

@@ -5,8 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Dashboard</title>
+  <script>
+    var user = JSON.parse(localStorage.getItem('user'));
+    if(!user) {
+      window.location.replace('/');
+    }
+  </script>
 </head>
 <body>
-  <p>User Dashboard</p>
+  <h2>Dashboard</h2>
+  <p>Name: <strong id="userName"></strong></p>
+  <p>Name: <strong id="userEmail"></strong></p>
+
+  <button id="logout">Logout</button>
+
+<script>
+  if(user) {
+    document.getElementById('userName').innerText = user.name;
+    document.getElementById('userEmail').innerText = user.email;
+  }
+  document.getElementById('logout').addEventListener("click", () => {
+    localStorage.clear();
+    window.location.replace('/');
+  });
+</script>
 </body>
 </html>
