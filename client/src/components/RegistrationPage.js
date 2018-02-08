@@ -1,30 +1,44 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react';
+import { 
+  Button, Form, Grid, Header, Image, Message, Segment 
+} from 'semantic-ui-react';
+
+const genderOptions = [
+  { key: 'm', text: 'Male', value: 'male' },
+  { key: 'f', text: 'Female', value: 'female' },
+]
 
 class RegistratioPage extends Component {
-
-  state = { name: '', email: '', password: '', confirmPassword: '', info: '' }
-
-  handleChange = (e, { name, value }) => {
-    this.setState({ [name]: value });
+  state = { 
+    firstName: '', lastName: '', gender: '', email: '', password: '', confirmPassword: '', info: '', success: ''
   }
+
+  handleChange = (e, { name, value }) => { this.setState({ [name]: value }); }
 
   emailSignup = () => {
     this.setState({ info: '' });
-    const { name, email, password, confirmPassword } = this.state;
+
+    const { firstName, lastName, gender, email, password, confirmPassword } = this.state;
+    
     axios.post('/register', {
-      name, email, password, confirmPassword
+      name: firstName + lastName,
+      gender,
+      email,
+      password, 
+      confirmPassword
     })
     .then(response => {
-      //console.log('server response:', response);
-      if(response.data.errorType === 'validation') {
-        this.setState({ info: response.data.errors });
+      console.log('server response:', response);
+      if(response.data.name === 'VALIDATION_ERROR') {
+        this.setState({ info: response.data.message });
       } else if(response.data.name === 'UserExistsError') {
         this.setState({ info: ['Email is already registered with us'] });
       } else if(response.data._id) {
-        window.location.replace('/dashboard');
+        localStorage.setItem('user', JSON.stringify(response.data));
+        this.setState({ success: ['Account created succesfully!'] });
+        this.props.history.push("dashboard");
       } 
     })
     .catch(error => {
@@ -54,9 +68,12 @@ class RegistratioPage extends Component {
           <Form size='large' onSubmit={this.emailSignup}>
             <Segment stacked>
               <Form.Group>
-                <Form.Input placeholder='First name' name='name' value={this.state.name} onChange={this.handleChange} />
-                <Form.Input placeholder='Last name' />
+                <Form.Input placeholder='First name' name='firstName' value={this.state.firstName} onChange={this.handleChange} />
+                <Form.Input style={{ marginRight: '10px' }} placeholder='Last name' name='lastName'value={this.state.lastName} onChange={this.handleChange} />
               </Form.Group>
+              
+                <Form.Select fluid options={genderOptions} name="gender" placeholder='Gender' onChange={this.handleChange}/>
+              
               <br /> 
               <Form.Input
                 fluid
@@ -100,6 +117,9 @@ class RegistratioPage extends Component {
           </Form>
           {
             this.state.info ? <Message error list={this.state.info} /> : null
+          }
+          {
+            this.state.success ? <Message success list={this.state.success} /> : null
           }
           <Message>
             Already a member ? <Link to="/login">Login</Link>

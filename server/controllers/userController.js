@@ -5,6 +5,7 @@ const promisify = require('es6-promisify');
 exports.validateRegister = (req, res, next) => {
   req.sanitizeBody('name');
   req.checkBody('name', 'Please supply a name!').notEmpty();
+  req.checkBody('gender', 'Please specify a gender!').notEmpty();
   req.checkBody('email', 'Invalid Email!').isEmail();
   req.sanitizeBody('email').normalizeEmail({
     gmail_remove_dots: false,
@@ -17,8 +18,8 @@ exports.validateRegister = (req, res, next) => {
 
   const errors = req.validationErrors();
   if (errors) {
-    //console.log('error', errors.map(err => err.msg));
-    res.json({"errorType": "validation", "errors": errors.map(err => err.msg)});
+    console.log('error', errors.map(err => err.msg));
+    res.json({ "name": "VALIDATION_ERROR", "message": errors.map(err => err.msg)});
     return;
   }
   next();
@@ -27,20 +28,34 @@ exports.validateRegister = (req, res, next) => {
 exports.register = async (req, res, next) => {
   const user = new User({ email: req.body.email, name: req.body.name });
   const register = promisify(User.register, User);
+  console.log('registration', user);  
 
   await register(user, req.body.password)
     .then(result => {
-      //console.log('sucessssss', result);
+      console.log('sucessssss', result);
+      next();
     }, err => {
+      console.log('register error'); 
       res.send(err);
-      return;
     });
-  next(); 
 };
 
 exports.validateLogin = (req, res, next) => {
   req.checkBody('email', 'Invalid Email!').isEmail();
   req.checkBody('password', 'Password cannot be Blank!').notEmpty();
+ 
+  const errors = req.validationErrors();
+  if (errors) {
+    //console.log('error', errors.map(err => err.msg));
+    res.json({"errorType": "validation", "errors": errors.map(err => err.msg)});
+    return;
+  }
+  next();
+};
+
+exports.validateForgotPassword = (req, res, next) => {
+  console.log('in validateForgotPassword');
+  req.checkBody('email', 'Invalid Email!').isEmail();
  
   const errors = req.validationErrors();
   if (errors) {

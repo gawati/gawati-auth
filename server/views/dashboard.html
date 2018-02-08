@@ -4,9 +4,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Dashboard</title>
+  <title>Login Successful</title>
+  <script>
+    var user = JSON.parse(localStorage.getItem('user'));
+    if(!user) {
+        window.location.replace('/');
+    }else{
+        var beforeLoginUrl = localStorage.getItem('beforeLoginUrl');
+        if(!beforeLoginUrl){
+            localStorage.removeItem('beforeLoginUrl');
+            window.location.replace(beforeLoginUrl);
+        }
+
+    }
+  </script>
 </head>
 <body>
-  <p>User Dashboard</p>
+  <h2>Login Successful... Redirecting back</h2>
 </body>
 </html>

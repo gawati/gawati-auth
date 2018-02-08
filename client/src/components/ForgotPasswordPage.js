@@ -4,18 +4,23 @@ import axios from 'axios';
 import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react'
 
 class ResetPasswordPage extends Component {
-  state = { password: '', confirmPassword: '', errors: '', redirect: false }
+  state = { email: '', errors: '', success: '' }
 
   handleChange = (e, { name, value }) => { this.setState({ [name]: value }); }
 
   reset = () => {
-    this.setState({ errors: '' });
-    const { password, confirmPassword } = this.state;
-    axios.post('/reset-password', {
-      password, confirmPassword
+    this.setState({ info: '', success: '' });
+    const { email } = this.state;
+    axios.post('/forgot-password', {
+      email
     })
     .then(response => {
       console.log('server response:', response);
+      if(response.data.errorType === 'validation') {
+        this.setState({ errors: response.data.errors });
+      } else {
+        this.setState({ success: response.data });
+      }
     })
     .catch(error => {
       console.log('something went wrong!', error);
@@ -23,12 +28,6 @@ class ResetPasswordPage extends Component {
   }
 
   render() {
-    const { redirect } = this.state;
-
-    if (redirect) {
-      return <Redirect to='/reset-password' />;
-    }
-
     return (
       <div className='login-form'>
         <style>{`
@@ -45,32 +44,22 @@ class ResetPasswordPage extends Component {
         >
           <Grid.Column style={{ maxWidth: 450 }}>
             <Header as='h2' color='teal' textAlign='center'>
-              <Image src='../logo.png' />
+              <Image src='/logo.png' />
               Gawati | Reset Password
             </Header>
             <Form size='large' onSubmit={this.reset}>
               <Segment stacked>
                 <Form.Input
                   fluid
-                  icon='lock'
+                  icon='user'
                   iconPosition='left'
-                  name='password'
-                  placeholder='Password'
-                  type='password'
-                  value={this.state.password}
+                  name='email'
+                  label='Put your Email here'
+                  placeholder='E-mail address'
+                  value={this.state.email}
                   onChange={this.handleChange}
                 />
-                <Form.Input
-                  fluid
-                  icon='lock'
-                  iconPosition='left'
-                  name='confirmPassword'
-                  placeholder='Re-enter Password'
-                  type='password'
-                  value={this.state.confirmPassword}
-                  onChange={this.handleChange}
-                />
-                <Button>Change Password</Button>
+                <Button>Send Reset Link</Button>
               </Segment>
             </Form>
             { this.state.errors ? <Message error list={this.state.errors} /> : null }

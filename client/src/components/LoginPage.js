@@ -21,7 +21,8 @@ class LoginPage extends Component {
       } else if(response.data === 401) {
         this.setState({ info: ['The email or password is incorrect'] });
       } else if(response.data._id) {
-        window.location.replace('/dashboard');
+        localStorage.setItem('user', JSON.stringify(response.data));
+        this.props.history.push("dashboard");
       } 
     })
     .catch(error => {
@@ -76,7 +77,7 @@ class LoginPage extends Component {
               this.state.info ? <Message error list={this.state.info} /> : null
             }
             <Message>
-              <Link to="/reset-password">Forgot Password</Link> | Don't have account ? <Link to="/register">Sign Up</Link>
+              <Link to="/forgot-password">Forgot Password</Link> | Don't have account ? <Link to="/register">Sign Up</Link>
             </Message>
           </Grid.Column>
         </Grid>

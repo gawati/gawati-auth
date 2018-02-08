@@ -21,6 +21,8 @@ const userSchema = new mongoose.Schema({
     required: 'Please Supply an email address.'
   },
   slug: String,
+  resetPasswordToken: String,
+  resetPasswordExpires: Date
 });
 
 userSchema.pre('save', async function(next) {

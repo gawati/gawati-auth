@@ -1,24 +1,27 @@
 {
-  "name": "gawati-auth",
+  "name": "gawati",
   "version": "1.0.0",
-  "gawati-version": "1.0.7",
   "scripts": {
     "webpack": "webpack",
-    "watch": "nodemon server.js --ignore client/ --ignore node_modules/",
-    "vars": "env | grep npm_package_ | grep -v npm_lifecycle_script"
+    "watch": "NODE_ENV=development nodemon server.js --ignore client/ --ignore node_modules/"
   },
   "dependencies": {
     "axios": "^0.17.1",
     "body-parser": "^1.18.2",
     "dotenv": "^4.0.0",
+    "ejs": "^2.5.7",
     "es6-promisify": "^5.0.0",
     "express": "^4.16.2",
     "express-validator": "^4.3.0",
+    "html-to-text": "^3.3.0",
+    "juice": "^4.2.2",
     "mongoose": "^5.0.1",
     "mongoose-mongodb-errors": "0.0.2",
+    "nodemailer": "^4.4.2",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^4.4.0",
+    "pug": "^2.0.0-rc.4",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-router-dom": "^4.2.2",
