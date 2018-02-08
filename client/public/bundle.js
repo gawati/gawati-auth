@@ -44078,17 +44078,35 @@ var LoginPage = function (_Component) {
       }).catch(function (error) {
         console.log('something went wrong!', error);
       });
+    }, _this.getParameterByName = function (name, url) {
+      if (!url) url = window.location.href;
+      name = name.replace(/[\[\]]/g, "\\$&");
+      var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+          results = regex.exec(url);
+      if (!results) return null;
+      if (!results[2]) return '';
+      return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }, _this.checkRedirect = function () {
+      var beforeLoginUrl = _this.getParameterByName('beforeLoginUrl');
+      if (beforeLoginUrl != null && beforeLoginUrl != undefined) {
+        localStorage.setItem('beforeLoginUrl', beforeLoginUrl);
+      }
     }, _temp), _possibleConstructorReturn(_this, _ret);
   }
 
   _createClass(LoginPage, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.checkRedirect();
+    }
+  }, {
     key: 'render',
     value: function render() {
       return _react2.default.createElement(
         'div',
         { className: 'login-form', __source: {
             fileName: _jsxFileName,
-            lineNumber: 35
+            lineNumber: 55
           },
           __self: this
         },
@@ -44097,7 +44115,7 @@ var LoginPage = function (_Component) {
           {
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 36
+              lineNumber: 56
             },
             __self: this
           },
@@ -44111,7 +44129,7 @@ var LoginPage = function (_Component) {
             verticalAlign: 'middle',
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 43
+              lineNumber: 63
             },
             __self: this
           },
@@ -44119,7 +44137,7 @@ var LoginPage = function (_Component) {
             _semanticUiReact.Grid.Column,
             { style: { maxWidth: 450 }, __source: {
                 fileName: _jsxFileName,
-                lineNumber: 48
+                lineNumber: 68
               },
               __self: this
             },
@@ -44127,13 +44145,13 @@ var LoginPage = function (_Component) {
               _semanticUiReact.Header,
               { as: 'h2', color: 'teal', textAlign: 'center', __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 49
+                  lineNumber: 69
                 },
                 __self: this
               },
               _react2.default.createElement(_semanticUiReact.Image, { src: '/logo.png', __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 50
+                  lineNumber: 70
                 },
                 __self: this
               }),
@@ -44143,7 +44161,7 @@ var LoginPage = function (_Component) {
               _semanticUiReact.Form,
               { size: 'large', onSubmit: this.login, __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 52
+                  lineNumber: 72
                 },
                 __self: this
               },
@@ -44151,7 +44169,7 @@ var LoginPage = function (_Component) {
                 _semanticUiReact.Segment,
                 { stacked: true, __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 53
+                    lineNumber: 73
                   },
                   __self: this
                 },
@@ -44165,7 +44183,7 @@ var LoginPage = function (_Component) {
                   onChange: this.handleChange,
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 54
+                    lineNumber: 74
                   },
                   __self: this
                 }),
@@ -44180,7 +44198,7 @@ var LoginPage = function (_Component) {
                   onChange: this.handleChange,
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 63
+                    lineNumber: 83
                   },
                   __self: this
                 }),
@@ -44188,7 +44206,7 @@ var LoginPage = function (_Component) {
                   _semanticUiReact.Button,
                   { color: 'teal', fluid: true, size: 'large', __source: {
                       fileName: _jsxFileName,
-                      lineNumber: 73
+                      lineNumber: 93
                     },
                     __self: this
                   },
@@ -44198,7 +44216,7 @@ var LoginPage = function (_Component) {
             ),
             this.state.info ? _react2.default.createElement(_semanticUiReact.Message, { error: true, list: this.state.info, __source: {
                 fileName: _jsxFileName,
-                lineNumber: 77
+                lineNumber: 97
               },
               __self: this
             }) : null,
@@ -44207,7 +44225,7 @@ var LoginPage = function (_Component) {
               {
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 79
+                  lineNumber: 99
                 },
                 __self: this
               },
@@ -44215,7 +44233,7 @@ var LoginPage = function (_Component) {
                 _reactRouterDom.Link,
                 { to: '/forgot-password', __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 80
+                    lineNumber: 100
                   },
                   __self: this
                 },
@@ -44226,7 +44244,7 @@ var LoginPage = function (_Component) {
                 _reactRouterDom.Link,
                 { to: '/register', __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 80
+                    lineNumber: 100
                   },
                   __self: this
                 },
@@ -66008,10 +66026,7 @@ var LogoutPage = function (_Component) {
           value = _ref2.value;
       _this.setState(_defineProperty({}, name, value));
     }, _this.logout = function () {
-      console.log(localStorage.getItem('user'));
       localStorage.removeItem('user');
-      console.log(localStorage.getItem('user'));
-      console.log(localStorage.getItem('afterLogoutUrl'));
       var afterLogoutUrl = localStorage.getItem('afterLogoutUrl');
       if (afterLogoutUrl != null) {
         localStorage.removeItem('afterLogoutUrl');
@@ -66019,17 +66034,35 @@ var LogoutPage = function (_Component) {
       } else {
         _this.props.history.push("login");
       }
+    }, _this.getParameterByName = function (name, url) {
+      if (!url) url = window.location.href;
+      name = name.replace(/[\[\]]/g, "\\$&");
+      var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+          results = regex.exec(url);
+      if (!results) return null;
+      if (!results[2]) return '';
+      return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }, _this.checkRedirect = function () {
+      var afterLogoutUrl = _this.getParameterByName('afterLogoutUrl');
+      if (afterLogoutUrl != null && afterLogoutUrl != undefined) {
+        localStorage.setItem('afterLogoutUrl', afterLogoutUrl);
+      }
     }, _temp), _possibleConstructorReturn(_this, _ret);
   }
 
   _createClass(LogoutPage, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.checkRedirect();
+    }
+  }, {
     key: 'render',
     value: function render() {
       return _react2.default.createElement(
         'div',
         { className: 'login-form', __source: {
             fileName: _jsxFileName,
-            lineNumber: 27
+            lineNumber: 44
           },
           __self: this
         },
@@ -66038,7 +66071,7 @@ var LogoutPage = function (_Component) {
           {
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 28
+              lineNumber: 45
             },
             __self: this
           },
@@ -66052,7 +66085,7 @@ var LogoutPage = function (_Component) {
             verticalAlign: 'middle',
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 35
+              lineNumber: 52
             },
             __self: this
           },
@@ -66060,7 +66093,7 @@ var LogoutPage = function (_Component) {
             _semanticUiReact.Grid.Column,
             { style: { maxWidth: 450 }, __source: {
                 fileName: _jsxFileName,
-                lineNumber: 40
+                lineNumber: 57
               },
               __self: this
             },
@@ -66068,23 +66101,34 @@ var LogoutPage = function (_Component) {
               _semanticUiReact.Header,
               { as: 'h2', color: 'teal', textAlign: 'center', __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 41
+                  lineNumber: 58
                 },
                 __self: this
               },
               _react2.default.createElement(_semanticUiReact.Image, { src: '/logo.png', __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 42
+                  lineNumber: 59
                 },
                 __self: this
               }),
               ' Gawati | Logout'
             ),
             _react2.default.createElement(
+              'p',
+              {
+                __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 61
+                },
+                __self: this
+              },
+              ' Are you really want to logout ? '
+            ),
+            _react2.default.createElement(
               _semanticUiReact.Button,
               { color: 'teal', fluid: true, size: 'large', onClick: this.logout, __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 44
+                  lineNumber: 62
                 },
                 __self: this
               },
@@ -66156,19 +66200,12 @@ var DashboardPage = function (_Component) {
           value = _ref2.value;
       _this.setState(_defineProperty({}, name, value));
     }, _this.logout = function () {
-      localStorage.removeItem('user');
-      var afterLogoutUrl = localStorage.getItem('afterLogoutUrl');
-      if (afterLogoutUrl != null) {
-        localStorage.removeItem('afterLogoutUrl');
-        window.location.replace(afterLogoutUrl);
-      } else {
-        _this.props.history.push("login");
-      }
+      _this.props.history.push("logout");
     }, _this.redirect = function () {
       var beforeLoginUrl = localStorage.getItem('beforeLoginUrl');
       if (beforeLoginUrl != null) {
         localStorage.removeItem('beforeLoginUrl');
-        window.location.replace(beforeLoginUrl);
+        window.location.replace(beforeLoginUrl + "?token=" + localStorage.getItem('user'));
       } else {
         //this.props.history.push("dasboard");
       }
@@ -66182,7 +66219,7 @@ var DashboardPage = function (_Component) {
         'div',
         { className: 'login-form', __source: {
             fileName: _jsxFileName,
-            lineNumber: 33
+            lineNumber: 26
           },
           __self: this
         },
@@ -66191,7 +66228,7 @@ var DashboardPage = function (_Component) {
           {
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 34
+              lineNumber: 27
             },
             __self: this
           },
@@ -66205,7 +66242,7 @@ var DashboardPage = function (_Component) {
             verticalAlign: 'middle',
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 44
+              lineNumber: 37
             },
             __self: this
           },
@@ -66213,7 +66250,7 @@ var DashboardPage = function (_Component) {
             _semanticUiReact.Grid.Column,
             { style: { maxWidth: 450 }, __source: {
                 fileName: _jsxFileName,
-                lineNumber: 49
+                lineNumber: 42
               },
               __self: this
             },
@@ -66221,13 +66258,13 @@ var DashboardPage = function (_Component) {
               _semanticUiReact.Header,
               { as: 'h2', color: 'teal', textAlign: 'center', __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 50
+                  lineNumber: 43
                 },
                 __self: this
               },
               _react2.default.createElement(_semanticUiReact.Image, { src: '/logo.png', __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 51
+                  lineNumber: 44
                 },
                 __self: this
               }),
@@ -66237,7 +66274,7 @@ var DashboardPage = function (_Component) {
               _semanticUiReact.Button,
               { color: 'teal', fluid: true, size: 'large', onClick: this.logout, __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 53
+                  lineNumber: 46
                 },
                 __self: this
               },
@@ -66246,7 +66283,7 @@ var DashboardPage = function (_Component) {
             _react2.default.createElement('br', {
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 53
+                lineNumber: 46
               },
               __self: this
             }),
@@ -66254,7 +66291,7 @@ var DashboardPage = function (_Component) {
               _semanticUiReact.Button,
               { color: 'teal', fluid: true, size: 'large', onClick: this.redirect, __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 54
+                  lineNumber: 47
                 },
                 __self: this
               },

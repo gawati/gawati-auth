@@ -30,6 +30,26 @@ class LoginPage extends Component {
     });
   }
 
+  getParameterByName = (name, url)=>{
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
+    checkRedirect = () =>{
+        var beforeLoginUrl = this.getParameterByName('beforeLoginUrl');
+        if(beforeLoginUrl!=null && beforeLoginUrl!=undefined){
+            localStorage.setItem('beforeLoginUrl', beforeLoginUrl);
+        }
+    }
+    componentDidMount() {
+        this.checkRedirect();
+    }
+
   render() {
     return (
       <div className='login-form'>

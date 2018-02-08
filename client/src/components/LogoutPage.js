@@ -9,10 +9,7 @@ class LogoutPage extends Component {
   handleChange = (e, { name, value }) => { this.setState({ [name]: value }); }
 
   logout = () => {
-    console.log(localStorage.getItem('user'));
     localStorage.removeItem('user');
-    console.log(localStorage.getItem('user'));
-    console.log(localStorage.getItem('afterLogoutUrl'));
     var afterLogoutUrl = localStorage.getItem('afterLogoutUrl');
     if(afterLogoutUrl!=null){
         localStorage.removeItem('afterLogoutUrl');
@@ -21,6 +18,26 @@ class LogoutPage extends Component {
         this.props.history.push("login");
     }
   }
+
+  getParameterByName = (name, url) => {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
+    checkRedirect = () => {
+        var afterLogoutUrl = this.getParameterByName('afterLogoutUrl');
+        if(afterLogoutUrl!=null && afterLogoutUrl!=undefined){
+            localStorage.setItem('afterLogoutUrl', afterLogoutUrl);
+        }
+    }
+    componentDidMount() {
+        this.checkRedirect();
+    }
 
   render() {
     return (
@@ -41,6 +58,7 @@ class LogoutPage extends Component {
             <Header as='h2' color='teal' textAlign='center'>
               <Image src='/logo.png' /> Gawati | Logout
             </Header>
+            <p> Are you really want to logout ? </p>
              <Button color='teal' fluid size='large' onClick={this.logout}>Logout</Button>
           </Grid.Column>
         </Grid>

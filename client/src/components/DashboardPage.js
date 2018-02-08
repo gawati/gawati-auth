@@ -8,21 +8,14 @@ class DashboardPage extends Component {
   handleChange = (e, { name, value }) => { this.setState({ [name]: value }); }
 
   logout = () => {
-    localStorage.removeItem('user');
-    var afterLogoutUrl = localStorage.getItem('afterLogoutUrl');
-    if(afterLogoutUrl!=null){
-        localStorage.removeItem('afterLogoutUrl');
-        window.location.replace(afterLogoutUrl);
-    }else{
-        this.props.history.push("login");
-    }
+    this.props.history.push("logout");
   }
 
   redirect = () => {
     var beforeLoginUrl = localStorage.getItem('beforeLoginUrl');
     if(beforeLoginUrl!=null){
         localStorage.removeItem('beforeLoginUrl');
-        window.location.replace(beforeLoginUrl);
+        window.location.replace(beforeLoginUrl+"?token="+localStorage.getItem('user'));
     }else{
         //this.props.history.push("dasboard");
     }
